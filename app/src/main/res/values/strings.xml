@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Vk Topics Observer</string>
+    <string name="title_home">Home</string>
+    <string name="title_creator">Add topic</string>
+    <string name="title_settings">Settings</string>
+    <string name="topic_url_hint">Enter topic URL</string>
+    <string name="topic_add_btn">Add topic</string>
+</resources>
