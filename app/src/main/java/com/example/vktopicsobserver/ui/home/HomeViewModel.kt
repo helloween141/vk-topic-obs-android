@@ -28,10 +28,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var loader: MutableLiveData<Boolean> = MutableLiveData()
     val vkListData: MutableLiveData<MutableList<Any>> = MutableLiveData<MutableList<Any>>()
 
-    init {
-        fetchData(refresh = false)
-    }
-
     fun fetchData(refresh: Boolean) {
         viewModelScope.launch(Dispatchers.Main) {
             if (!refresh) {

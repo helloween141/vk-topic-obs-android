@@ -36,5 +36,7 @@ class HomeFragment : Fragment() {
         homeViewModel.vkListData.observe(viewLifecycleOwner, Observer {
             adapter.refreshItems()
         })
+
+        homeViewModel.fetchData(refresh = false)
     }
 }
