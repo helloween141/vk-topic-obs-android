@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vktopicsobserver.R
 import com.example.vktopicsobserver.ui.home.adapters.ItemAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_toolbar.*
+import kotlinx.android.synthetic.main.topic_row_item.*
 
 class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()

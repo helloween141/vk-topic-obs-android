@@ -31,6 +31,10 @@ class ItemAdapter(private val homeViewModel: HomeViewModel) :
         override fun bind(item: TopicCellModel) {
             itemView.tv_topicTitle.text = item.title
             Picasso.get().load(item.groupPhoto).resize(150, 150).into(itemView.img_group);
+
+            itemView.action_delete.setOnClickListener {
+                deleteItem(item.uid)
+            }
         }
     }
 
@@ -57,16 +61,6 @@ class ItemAdapter(private val homeViewModel: HomeViewModel) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return adapterDataList.size
-    }
-
-    fun refreshItems() {
-        this.adapterDataList = homeViewModel.vkListData.value!!
-        notifyDataSetChanged()
-    }
-
-
     override fun getItemViewType(position: Int): Int {
         val comparable = adapterDataList[position]
         return when (comparable) {
@@ -83,6 +77,20 @@ class ItemAdapter(private val homeViewModel: HomeViewModel) :
             is TopicViewHolder -> holder.bind(element as TopicCellModel)
             else -> throw IllegalArgumentException()
         }
+    }
+
+    override fun getItemCount(): Int {
+        return adapterDataList.size
+    }
+
+    fun refreshItems() {
+        this.adapterDataList = homeViewModel.vkListData.value!!
+        notifyDataSetChanged()
+    }
+
+    fun deleteItem(topicId: Int) {
+        homeViewModel.deleteTopic(topicId)
+        notifyDataSetChanged()
     }
 
 }

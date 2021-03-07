@@ -8,7 +8,8 @@ data class CommentCellModel(
     val uid: Int,
     val text: String,
     val date: String,
-    val profile: ProfileModel
+    val profile: ProfileModel,
+    val topicId: Int
 )
 
 fun CommentModel.mapToUI(): CommentCellModel {
@@ -16,7 +17,8 @@ fun CommentModel.mapToUI(): CommentCellModel {
         uid = this.uid,
         text = this.text,
         date = this.date,
-        profile = this.profile
+        profile = this.profile,
+        topicId = this.topicId
     )
 }
 
@@ -25,6 +27,7 @@ fun Comment.mapToUI(): CommentCellModel {
         uid = this.uid,
         text = this.text,
         date = this.date,
-        profile = ProfileModel(this.profileId, this.profileName, this.profilePhoto)
+        profile = ProfileModel(this.profileId, this.profileName, this.profilePhoto),
+        topicId = this.topicId
     )
 }

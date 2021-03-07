@@ -40,6 +40,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //TODO: debug
+     fun deleteTopic(topicId: Int) {
+        viewModelScope.launch(Dispatchers.Main) {
+            _topicGroupRepository.deleteByTopicId(topicId)
+            vkListData.value?.filter { item ->
+                (item is TopicCellModel && item.uid != topicId || item is CommentCellModel && item.topicId != topicId)
+            }
+        }
+    }
+
     private suspend fun getDataFromDB() {
         val tempList: MutableList<Any> = emptyList<Any>().toMutableList()
         getTopicWithComments().forEach {
@@ -101,7 +111,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _vkTopicRepository.fetchTopics(groupId, topicId.toString())
     }
 
-    suspend fun getComments(groupId: Int, topicId: Int): CommentContent = withContext(Dispatchers.IO) {
+    private suspend fun getComments(groupId: Int, topicId: Int): CommentContent = withContext(Dispatchers.IO) {
         _vkCommentRepository.fetchComments(groupId, topicId)
     }
 

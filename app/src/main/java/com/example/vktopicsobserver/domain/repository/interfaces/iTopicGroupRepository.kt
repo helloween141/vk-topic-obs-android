@@ -8,4 +8,5 @@ interface iTopicGroupRepository {
 
     suspend fun add(groupId: Int, topicId: Int)
 
+    suspend fun deleteByTopicId(topicId: Int)
 }

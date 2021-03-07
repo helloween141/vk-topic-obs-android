@@ -17,7 +17,6 @@ interface TopicGroupDao {
     @Insert
     suspend fun insert(topicGroup: TopicGroup)
 
-    @Delete
-    suspend fun delete(topicGroup: TopicGroup)
-
+    @Query("DELETE FROM topics_groups WHERE topicId = :topicId")
+    suspend fun deleteByTopicId(topicId: Int)
 }
