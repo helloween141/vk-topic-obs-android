@@ -12,8 +12,11 @@ interface TopicDao {
     @Update
     fun update(topic: Topic)
 
-    @Query("SELECT EXISTS(SELECT * FROM topics WHERE uid = :topicId)")
-    suspend fun isExists(topicId: Int): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM topics WHERE uid = :uid)")
+    suspend fun isExists(uid: Int): Boolean
+
+    @Query("SELECT * FROM topics WHERE uid = :uid")
+    suspend fun getOneByUid(uid: Int): Topic
 
     @Query("DELETE FROM topics")
     fun clear()

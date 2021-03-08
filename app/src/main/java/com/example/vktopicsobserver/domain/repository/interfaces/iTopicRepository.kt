@@ -8,6 +8,7 @@ import com.example.vktopicsobserver.domain.model.TopicModel
 interface iTopicRepository {
     suspend fun fetchTopics(groupId: Int, topicIds: String) : List<TopicModel>
     suspend fun getTopicWithComments() : List<TopicWithComments>
+    suspend fun getOneByUid(topicUid: Int): Topic
     suspend fun saveToDB(topic: Topic): Long
     suspend fun clearDataDB()
 }

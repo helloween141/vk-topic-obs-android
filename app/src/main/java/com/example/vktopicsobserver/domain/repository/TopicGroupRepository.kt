@@ -20,8 +20,8 @@ class TopicGroupRepository(application: Application) : iTopicGroupRepository {
         }
     }
 
-    override suspend fun deleteByTopicId(topicId: Int) {
-        topicGroupDao.deleteByTopicId(topicId)
+    override suspend fun delete(topicUid: Int) {
+        topicGroupDao.deleteByTopicUid(topicUid)
     }
 
 }

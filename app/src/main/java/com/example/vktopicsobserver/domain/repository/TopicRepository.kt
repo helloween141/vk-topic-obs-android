@@ -38,6 +38,10 @@ class TopicRepository(application: Application) : iTopicRepository {
         return topicCommentDao.getTopicAndComments()
     }
 
+    override suspend fun getOneByUid(topicUid: Int): Topic {
+        return topicDao.getOneByUid(topicUid)
+    }
+
     override suspend fun saveToDB(topic: Topic): Long {
         if (!topicDao.isExists(topic.uid)) {
             return topicDao.insert(topic)

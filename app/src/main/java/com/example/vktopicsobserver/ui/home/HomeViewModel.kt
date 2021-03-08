@@ -1,7 +1,9 @@
 package com.example.vktopicsobserver.ui.home
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -40,13 +42,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    //TODO: debug
-     fun deleteTopic(topicId: Int) {
+    fun deleteTopic(topicUid: Int) {
+        val tempList: MutableList<Any>? = vkListData.value
         viewModelScope.launch(Dispatchers.Main) {
-            _topicGroupRepository.deleteByTopicId(topicId)
-            vkListData.value?.filter { item ->
-                (item is TopicCellModel && item.uid != topicId || item is CommentCellModel && item.topicId != topicId)
+            val topic = withContext(Dispatchers.IO) { _vkTopicRepository.getOneByUid(topicUid) }
+            tempList?.removeAll {
+                (it is TopicCellModel && it.uid == topicUid) || (it is CommentCellModel && it.topicId == topic.id)
             }
+            vkListData.postValue(tempList)
+
+            //TODO: uid to id in table
+            withContext(Dispatchers.IO) { _topicGroupRepository.delete(topicUid) }
         }
     }
 
@@ -65,8 +71,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         try {
             // Очистка закешированных данных
             clearTopicComment()
-
-            topicsGroups.forEach{ topicGroup ->
+            topicsGroups.forEach { topicGroup ->
                 val (groupId, topicId) = listOf(topicGroup.groupId, topicGroup.topicId)
                 val vkTopics = getTopics(groupId, topicId)
 
@@ -74,26 +79,27 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     vkTopic.apply {
                         this.groupPhoto = withContext(Dispatchers.IO) { _vkGroupRepository.fetchGroup(groupId.toString()) }.photo
                     }
+                    resultList.add(vkTopic.mapToUI())
 
                     // Сохранение топика в БД
                     val insertedTopicId = withContext(Dispatchers.IO) { _vkTopicRepository.saveToDB(vkTopic.mapToDB()) }.toInt()
-                    resultList.add(vkTopic.mapToUI())
-
                     val vkComments = getComments(groupId, vkTopic.uid)
                     vkComments.items.forEach { comment ->
-                        comment.apply {
-                            this.profile = vkComments.profiles.filter { it.uid == comment.from_id }.single()
-                            this.topicId = insertedTopicId
+                        if (comment.from_id > 0) {
+                            comment.apply {
+                                this.profile = vkComments.profiles.single { it.uid == comment.from_id }
+                                this.topicId = insertedTopicId
+                            }
+                            // Сохранение комментария в БД
+                            withContext(Dispatchers.IO) { _vkCommentRepository.saveToDB(comment.mapToModel().mapToDB()) }
+                            Log.d("DEB4", "End")
+                            resultList.add(comment.mapToModel().mapToUI())
                         }
-                        // Сохранение комментария в БД
-                        withContext(Dispatchers.IO) { _vkCommentRepository.saveToDB(comment.mapToModel().mapToDB()) }
-                        resultList.add(comment.mapToModel().mapToUI())
                     }
                     vkListData.postValue(resultList)
                 }
             }
-        }
-        catch(e: Exception) {
+        } catch (e: Exception) {
             Log.d("API_ERROR", e.toString())
         }
     }
@@ -107,15 +113,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _topicGroupRepository.getAllFromDB()
     }
 
-    private suspend fun getTopics(groupId: Int, topicId: Int): List<TopicModel> = withContext(Dispatchers.IO) {
-        _vkTopicRepository.fetchTopics(groupId, topicId.toString())
-    }
+    private suspend fun getTopics(groupId: Int, topicId: Int): List<TopicModel> =
+        withContext(Dispatchers.IO) {
+            _vkTopicRepository.fetchTopics(groupId, topicId.toString())
+        }
 
-    private suspend fun getComments(groupId: Int, topicId: Int): CommentContent = withContext(Dispatchers.IO) {
-        _vkCommentRepository.fetchComments(groupId, topicId)
-    }
+    private suspend fun getComments(groupId: Int, topicId: Int): CommentContent =
+        withContext(Dispatchers.IO) {
+            _vkCommentRepository.fetchComments(groupId, topicId)
+        }
 
-    private suspend fun getTopicWithComments(): List<TopicWithComments> = withContext(Dispatchers.IO) {
-        _vkTopicRepository.getTopicWithComments()
-    }
+    private suspend fun getTopicWithComments(): List<TopicWithComments> =
+        withContext(Dispatchers.IO) {
+            _vkTopicRepository.getTopicWithComments()
+        }
 }
