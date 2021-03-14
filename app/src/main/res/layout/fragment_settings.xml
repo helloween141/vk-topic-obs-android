@@ -4,23 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".ui.settings.SettingsFragment">
 
-    <EditText
-        android:id="@+id/editTextNumberSigned"
-        android:layout_width="wrap_content"
+    <CheckBox
+        android:id="@+id/cb_sort_topics"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="numberSigned"
-        tools:layout_editor_absoluteX="25dp"
-        tools:layout_editor_absoluteY="64dp" />
+        android:text="@string/title_topics_sort_asc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/cb_sort_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_comments_sort_asc"
+        app:layout_constraintTop_toBottomOf="@+id/cb_sort_topics"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_sort_comments">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10sp"
+            android:layout_marginRight="10sp"
+            android:text="@string/title_max_comments" />
+
+        <EditText
+            android:id="@+id/et_max_comments_per_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="3"
+            android:inputType="numberSigned"
+            android:hint="" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_save_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
-        tools:layout_editor_absoluteX="25dp"
-        tools:layout_editor_absoluteY="207dp" />
+        android:text="@string/title_save_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

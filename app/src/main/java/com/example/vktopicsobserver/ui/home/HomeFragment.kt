@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vktopicsobserver.R
 import com.example.vktopicsobserver.ui.home.adapters.ItemAdapter
+import com.example.vktopicsobserver.ui.settings.SettingsViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_toolbar.*
 import kotlinx.android.synthetic.main.topic_row_item.*

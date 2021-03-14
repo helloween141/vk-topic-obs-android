@@ -5,4 +5,8 @@
     <string name="title_settings">Settings</string>
     <string name="topic_url_hint">Enter topic URL</string>
     <string name="topic_add_btn">Add topic</string>
+    <string name="title_topics_sort_asc">Ascending topics order</string>
+    <string name="title_comments_sort_asc">Ascending comments order</string>
+    <string name="title_max_comments">Max comments to show</string>
+    <string name="title_save_settings">Save</string>
 </resources>

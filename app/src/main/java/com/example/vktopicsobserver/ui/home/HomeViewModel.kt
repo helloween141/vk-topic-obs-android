@@ -1,9 +1,7 @@
 package com.example.vktopicsobserver.ui.home
 
 import android.app.Application
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,10 +11,7 @@ import com.example.vktopicsobserver.data.db.entity.mapToDB
 import com.example.vktopicsobserver.data.models.CommentContent
 import com.example.vktopicsobserver.domain.model.TopicModel
 import com.example.vktopicsobserver.domain.model.mapToModel
-import com.example.vktopicsobserver.domain.repository.CommentRepository
-import com.example.vktopicsobserver.domain.repository.GroupRepository
-import com.example.vktopicsobserver.domain.repository.TopicGroupRepository
-import com.example.vktopicsobserver.domain.repository.TopicRepository
+import com.example.vktopicsobserver.domain.repository.*
 import com.example.vktopicsobserver.ui.home.models.*
 import kotlinx.coroutines.*
 
@@ -35,7 +30,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             if (!refresh) {
                 getDataFromDB()
             }
-
             loader.postValue(true)
             getDataFromAPI()
             loader.postValue(false)
@@ -50,8 +44,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 (it is TopicCellModel && it.uid == topicUid) || (it is CommentCellModel && it.topicId == topic.id)
             }
             vkListData.postValue(tempList)
-
-            //TODO: uid to id in table
             withContext(Dispatchers.IO) { _topicGroupRepository.delete(topicUid) }
         }
     }
@@ -77,21 +69,28 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
                 vkTopics.forEach { vkTopic ->
                     vkTopic.apply {
-                        this.groupPhoto = withContext(Dispatchers.IO) { _vkGroupRepository.fetchGroup(groupId.toString()) }.photo
+                        this.groupPhoto =
+                            withContext(Dispatchers.IO) { _vkGroupRepository.fetchGroup(groupId.toString()) }.photo
                     }
                     resultList.add(vkTopic.mapToUI())
 
                     // Сохранение топика в БД
-                    val insertedTopicId = withContext(Dispatchers.IO) { _vkTopicRepository.saveToDB(vkTopic.mapToDB()) }.toInt()
+                    val insertedTopicId =
+                        withContext(Dispatchers.IO) { _vkTopicRepository.saveToDB(vkTopic.mapToDB()) }.toInt()
                     val vkComments = getComments(groupId, vkTopic.uid)
                     vkComments.items.forEach { comment ->
                         if (comment.from_id > 0) {
                             comment.apply {
-                                this.profile = vkComments.profiles.single { it.uid == comment.from_id }
+                                this.profile =
+                                    vkComments.profiles.single { it.uid == comment.from_id }
                                 this.topicId = insertedTopicId
                             }
                             // Сохранение комментария в БД
-                            withContext(Dispatchers.IO) { _vkCommentRepository.saveToDB(comment.mapToModel().mapToDB()) }
+                            withContext(Dispatchers.IO) {
+                                _vkCommentRepository.saveToDB(
+                                    comment.mapToModel().mapToDB()
+                                )
+                            }
                             Log.d("DEB4", "End")
                             resultList.add(comment.mapToModel().mapToUI())
                         }

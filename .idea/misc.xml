@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/android-projects/VkTopicsObserver/app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.37083333333333335" />
+        <entry key="..\:/android-projects/VkTopicsObserver/app/src/main/res/layout/fragment_settings.xml" value="0.5" />
+        <entry key="..\:/android-projects/VkTopicsObserver/app/src/main/res/layout/topic_row_item.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1537037037037037" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1537037037037037" />
         <entry key="app/src/main/res/layout/fragment_toolbar.xml" value="0.14114583333333333" />
